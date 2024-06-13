@@ -11,9 +11,19 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-        String fileName = "C:/10m.txt";
+        List<Integer> numbers = readDataFromFile("C:/10m.txt"); //Path to the file with data
+
+
+
+        long quantity = numbers.size();
+        System.out.println("quantity = " + quantity);
+
+    }
+
+
+    private static List<Integer> readDataFromFile(String pathToTheFile) {
         List<Integer> numbers = new ArrayList<>();
-        try (Stream<String> lines = Files.lines(Paths.get(fileName))) {
+        try (Stream<String> lines = Files.lines(Paths.get(pathToTheFile))) {
             numbers = lines
                     .map(String::trim)
                     .filter(line -> !line.isEmpty())
@@ -22,10 +32,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        long quantity = numbers.size();
-        System.out.println("quantity = " + quantity);
-
+        return numbers;
     }
 }
