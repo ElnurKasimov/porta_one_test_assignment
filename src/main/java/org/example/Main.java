@@ -41,11 +41,41 @@ public class Main {
         return numbers;
     }
 
-    private static List<Integer> sortList(List<Integer> list) {
-        return list.stream()
-                .sorted()
-                .toList();
+    private static List<Integer> sortList(List<Integer> inputList) {
+        if (inputList.size() <= 1) {
+            return inputList;
+        }
+        if (inputList.size() == 2) {
+            List<Integer> result = new ArrayList<>();
+            if (inputList.get(0) <= inputList.get(1)) {
+                result.add(inputList.get(0));
+                result.add(inputList.get(1));
+            } else {
+                result.add(inputList.get(1));
+                result.add(inputList.get(0));
+
+            }
+            return result;
+        }
+        int pivot = inputList.size() / 2;
+        Integer pivotValue = inputList.get(pivot);
+        List<Integer> less = new ArrayList<>();
+        List<Integer> greater = new ArrayList<>();
+        for (int i = 0; i < inputList.size(); i++) {
+            if (i != pivot) {
+                if (inputList.get(i) <= pivotValue) {
+                    less.add(inputList.get(i));
+                } else {
+                    greater.add(inputList.get(i));
+                }
+            }
+        }
+        List<Integer> result = new ArrayList<>(sortList(less));
+        result.add(pivotValue);
+        result.addAll(sortList(greater));
+        return result;
     }
+
 
     private static double findMedian(List<Integer> list) {
         if (list.size() %2 != 0) {
