@@ -7,14 +7,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
         List<Integer> numbers = readDataFromFile("C:/10m.txt"); //Path to the file with data
-//        List<Integer> numbers = Stream.of(1, 2, 3, 4, 5, 6).toList();
         List<Integer> sorted = sortList(numbers);
-
         System.out.println("Task 1");
         System.out.println("Max value in the input data : " + sorted.get(0));
         System.out.println("Task 2");
@@ -23,9 +22,13 @@ public class Main {
         System.out.println("Median value in the input data : " + findMedian(sorted));
         System.out.println("Task 4");
         System.out.println("Average value in the input data : " + findAverage(sorted));
-
+        System.out.println("Task 5");
+        System.out.println("Maximum sequence of numbers in ascending order in the input data : ");
+        System.out.println(findMaxSequence(numbers, "asc"));
+        System.out.println("Task 6");
+        System.out.println("Maximum sequence of numbers in descending order in the input data : ");
+        System.out.println(findMaxSequence(numbers, "des"));
     }
-
 
     private static List<Integer> readDataFromFile(String pathToTheFile) {
         List<Integer> numbers = new ArrayList<>();
@@ -76,7 +79,6 @@ public class Main {
         return result;
     }
 
-
     private static double findMedian(List<Integer> list) {
         if (list.size() %2 != 0) {
             return list.get(list.size()/2);
@@ -93,5 +95,33 @@ public class Main {
         return sum * 1. / list.size();
     }
 
+    private static List<Integer> findMaxSequence(List<Integer> numbers, String order) {
+        BiPredicate<Integer, Integer> condition;
+        if (order.equalsIgnoreCase("Asc")) {
+            condition = (a, b) -> a < b;
+        } else {
+            condition = (a, b) -> a > b;
+        }
+        List<Integer> result = new ArrayList<>();
+        List<Integer> temporaryList = new ArrayList<>();
+        temporaryList.add(numbers.get(0));
+        for (int i = 1; i < numbers.size(); i++) {
+            if (condition.test(numbers.get(i-1),numbers.get(i))) {
+                temporaryList.add(numbers.get(i));
+            } else {
+                if( temporaryList.size() > result.size()) {
+                    result.clear();
+                    result.addAll(temporaryList);
+                }
+                temporaryList.clear();
+                temporaryList.add(numbers.get(i));
+            }
+        }
+        if( temporaryList.size() > result.size()) {
+            result.clear();
+            result.addAll(temporaryList);
+        }
+        return result;
+    }
 
 }
